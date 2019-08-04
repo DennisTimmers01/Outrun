@@ -1,5 +1,5 @@
 import { Canvas } from 'react-three-fiber'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic'
 
 import { socket } from './';
@@ -12,16 +12,18 @@ function Scene() {
 
   useEffect(() => {
     socket.on('change-hue-external', data => setHue(data));
+
   })
 
   return (
-    <Canvas style={{height: '100vh'}} >
+    <Canvas style={{height: '100vh', backgroundColor: '#000'}} >
+      <hemisphereLight />
       <directionalLight args={[0xffffff, 1]} />
       {[...Array(groundCount)].map((_, index) => (
         <>
           <Ground position={[0, -1.5, (-50 * index)]} key={index} />
-          <Mountain position={[-10, 3, (-50 * index)]} />
-          <Mountain position={[10, 3, (-50 * index)]} />
+          <Mountain position={[-5, 3, (-50 * index)]} rotation={[0, 0, -1]} />
+          <Mountain position={[5, 3, (-50 * index)]} rotation={[0, 0, 1]} />
         </>
       ))}
     </Canvas>

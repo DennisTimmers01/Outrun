@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useRender } from 'react-three-fiber'
+import { useRender, useThree } from 'react-three-fiber'
 import { useState, useEffect, useRef, useMemo } from 'react';
 
 import { socket } from '../../../pages';
@@ -12,12 +12,16 @@ export function Ground (props) {
   const material = useRef(null);
   const texture = useRef(null);
 
+  const { scene } = useThree();
+
   const SegmentWidth = 50;
 
   const tile = useMemo(() => new THREE.TextureLoader().load('../../static/textures/tileNew128.svg'), []);
 
   useEffect(() => {
     socket.on('change-hue-external', data => setHue(data));
+    scene.fog = new THREE.FogExp2( 0x200522, 0.03 );
+    console.log(scene);
   })
   
   useEffect(() => {
