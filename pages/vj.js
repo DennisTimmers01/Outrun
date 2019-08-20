@@ -7,11 +7,11 @@ import { Ground } from '../components/vj/ground';
 import { Mountain } from '../components/vj/mountain';
 
 function Scene() {
-  const [hue, setHue] = useState(0);
+  const hue = useRef(0);
   const groundCount = 5
 
   useEffect(() => {
-    socket.on('change-hue-external', data => setHue(data));
+    socket.on('change-hue-external', data => hue.current = data);
 
   })
 
