@@ -14,12 +14,13 @@ export function FreakyDots() {
 
   useRender(() => {
     ticker += 0.01;
-    mesh.current.position.z = ((Math.sin(ticker) - 1) * 3 - 45);
+    mesh.current.position.z = ((Math.sin(ticker) - 1) * 2 - 45);
+    mesh.current.rotation.y = (Math.sin(ticker) * 5 - 20);
   }, false, []);
 
   return (
     <>
-        <group rotation={new THREE.Euler(0, 0, 0)}>
+        <group>
             <mesh
                 visible
                 position={[posX.current, posY.current + 10, -45]}
@@ -30,7 +31,7 @@ export function FreakyDots() {
                 <meshPhongMaterial attach="material" color="white" transparent />
             </mesh>
         </group>
-        <group rotation={new THREE.Euler(0, 0, rotation.current)}>
+        <group>
             <mesh
                 visible
                 position={[posX.current, posY.current + 10, -45]}
