@@ -10,19 +10,19 @@ export function Ground (props) {
   const geometry = useRef(null);
   const mesh = useRef(null);
   const material = useRef(null);
-  const texture = useRef(null);
-
+  
   const { scene } = useThree();
 
   const SegmentWidth = 50;
 
-  const tile = useMemo(() => new THREE.TextureLoader().load('../../static/textures/tileNew128.svg'), []);
+  const background = useMemo(() => new THREE.TextureLoader().load('../../static/background.jpg'), []);
 
   useEffect(() => {
     socket.on('change-hue-external', data => setHue(data));
+    
     scene.fog = new THREE.FogExp2( 0x200522, 0.03 );
-    console.log(scene);
-  })
+    // scene.background = background;
+  });
   
   useEffect(() => {
     const randomVertices = geometry.current.vertices.map(vertice => vertice.y = Math.random() * (.1 - .3) + 0);
@@ -45,31 +45,28 @@ export function Ground (props) {
     material.current.flatShading = true;
     material.current.side = THREE.DoubleSide;
     material.current.shadowSide = THREE.DoubleSide;
-
-    texture.current.wrapS = THREE.RepeatWrapping;
-    texture.current.wrapT = THREE.RepeatWrapping;
-    texture.current.repeat.set(50, 50);
+    material.current.shininess = 10;
+    // material.current.wireframe = props.isWireframe;
   }, []);
 
   useRender(() => {
     mesh.current.position.z += 0.05;
 
     if (mesh.current.position.z >= SegmentWidth) {
-      mesh.current.position.z = (6 - 1) * -SegmentWidth;
+      mesh.current.position.z = (5 - 1) * -SegmentWidth;
     }
   }, false, [hue])
 
   return (
-    <mesh rotation={props.rotation} position={props.position} ref={mesh}>
-      <boxGeometry attach="geometry" args={[SegmentWidth, 1, SegmentWidth, SegmentWidth, 1, SegmentWidth]} ref={geometry} />
-      <meshStandardMaterial attach="material" color={0xada23d} emissive={0x2d475e} ref={material} side='Backside'>
-        <primitive attach="map" object={tile} ref={texture} />
-      </meshStandardMaterial>
-    </mesh>
+      <mesh rotation={props.rotation} position={props.position} ref={mesh}>
+        <boxGeometry attach="geometry" args={[SegmentWidth, 1, SegmentWidth, SegmentWidth, 1, SegmentWidth]} ref={geometry} />
+        <meshPhongMaterial attach="material" color={0xada23d} emissive={0x2d475e} ref={material} side='Backside'/>
+      </mesh>
   )
 }
 
 Ground.defaultProps = {
   rotation: [0, 0, 0],
   position: [0, 0, 0],
+  isWireframe: false,
 }

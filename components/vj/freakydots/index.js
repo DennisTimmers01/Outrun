@@ -1,64 +1,46 @@
 import * as THREE from 'three';
-import { useRender, useThree } from 'react-three-fiber'
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
+import {useRender} from 'react-three-fiber';
 
-const FreakyDots = () => {
-  const [timer, setTimer] = useState(0);
+export function FreakyDots() {
+  const amount = 300;
+  const freakyDotsSize = [80, 30];
+  const posX = useRef(Math.random() * (freakyDotsSize[0] - -freakyDotsSize[0]) + -freakyDotsSize[0]);
+  const posY = useRef(Math.random() * (freakyDotsSize[1] - -freakyDotsSize[1]) + -freakyDotsSize[1]);
+  const rotation = useRef(0);
+  const mesh = useRef(null);
 
-  const freakyDotsAmt = useRef(200);
-  const freakyDotsSize = useRef([20, 20]);
-  const freakyDotsPosX = useRef([...Array(freakyDotsAmt.current)].map(() => Math.random() * (freakyDotsSize.current[0] - -freakyDotsSize.current[0]) + -freakyDotsSize.current[0]));
-  const freakyDotsPosY = useRef([...Array(freakyDotsAmt.current)].map(() => Math.random() * (freakyDotsSize.current[1] - -freakyDotsSize.current[1]) + -freakyDotsSize.current[1]));
-  const freakyDotsCopyOffset = useRef([0, 0]);
-  const freakyDotsCopyRotation = useRef(0);
-  const freakyDotsCopyScale = useRef(1);
+  let ticker = 0;
 
-  useEffect(() => {
-    setTimer(timer + 0.01);
-
-    // freakyDotsCopyRotation.current = Math.sin(timer) * 0.05;
-    freakyDotsCopyScale.current = (Math.sin(timer) + 20) * 0.05;
-  });
-
-  useEffect(() => {
-
-  }, []);
+  useRender(() => {
+    ticker += 0.01;
+    mesh.current.position.z = ((Math.sin(ticker) - 1) * 3 - 45);
+  }, false, []);
 
   return (
     <>
-        <FreakyDotsLayer
-            rotation={0}
-            scale={1}
-            amount={freakyDotsAmt.current}
-            posY={freakyDotsPosY.current}
-            posX={freakyDotsPosX.current}
-        />
-        <FreakyDotsLayer
-            rotation={freakyDotsCopyRotation.current}
-            scale={freakyDotsCopyScale.current}
-            amount={freakyDotsAmt.current}
-            posX={freakyDotsPosX.current}
-            posY={freakyDotsPosY.current}
-        />
+        <group rotation={new THREE.Euler(0, 0, 0)}>
+            <mesh
+                visible
+                position={[posX.current, posY.current + 10, -45]}
+                rotation={[0, 0, 0]}
+                ref={mesh}
+            >
+                <circleGeometry attach="geometry" args={[0.2, 4]} />
+                <meshPhongMaterial attach="material" color="white" transparent />
+            </mesh>
+        </group>
+        <group rotation={new THREE.Euler(0, 0, rotation.current)}>
+            <mesh
+                visible
+                position={[posX.current, posY.current + 10, -45]}
+                rotation={[0, 0, 0]}
+                ref={mesh}
+            >
+                <circleGeometry attach="geometry" args={[0.2, 4]} />
+                <meshPhongMaterial attach="material" color="white" transparent />
+            </mesh>
+        </group>
     </>
   );
 };
-
-export default FreakyDots;
-
-const FreakyDotsLayer = ({rotation, scale, amount, posX, posY}) => (
-    <group rotation={new THREE.Euler(0, 0, rotation)}>
-        <>
-            {[...Array(amount)].map((_, index) => (
-                <mesh
-                    visible
-                    position={[posX[index], posY[index] + 10, -30 * scale]}
-                    rotation={[0, 0, 0]}
-                >
-                    <circleGeometry attach="geometry" args={[0.3, 10]} />
-                    <meshPhongMaterial attach="material" color="white" transparent />
-                </mesh>
-            ))}
-        </>
-    </group>
-);

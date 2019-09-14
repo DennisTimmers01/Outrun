@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useRender, useThree } from 'react-three-fiber'
+import { useRender } from 'react-three-fiber'
 import { useEffect, useRef, useMemo } from 'react';
 
 export function Mountain (props) {
@@ -8,13 +8,15 @@ export function Mountain (props) {
   const material = useRef(null);
   const texture = useRef(null);
   
+
+  
   const tile = useMemo(() => new THREE.TextureLoader().load('../../static/textures/tileGreen128.svg'), []);
   const reflectionBackground = useMemo(() => new THREE.TextureLoader().load('../../static/textures/reflaction.png'), []);
 
   const SegmentWidth = 50;
 
   useEffect(() => {
-    const randomVertices = geometry.current.vertices.map(vertice => vertice.y = Math.random() * (10 - 15) + 0);
+    const randomVertices = geometry.current.vertices.map(vertice => vertice.y = Math.random() * (1 - 3) + 0);
     
     // save first vertices row in array 
     const startVertices = geometry.current.vertices.slice(0, SegmentWidth);
@@ -35,9 +37,9 @@ export function Mountain (props) {
     material.current.side = THREE.DoubleSide;
     material.current.shadowSide = THREE.DoubleSide;
 
-    texture.current.wrapS = THREE.RepeatWrapping;
-    texture.current.wrapT = THREE.RepeatWrapping;
-    texture.current.repeat.set(10, 10);
+    // texture.current.wrapS = THREE.RepeatWrapping;
+    // texture.current.wrapT = THREE.RepeatWrapping;
+    // texture.current.repeat.set(10, 10);
   }, []);
 
   useRender(() => {
@@ -50,9 +52,9 @@ export function Mountain (props) {
 
   return (
     <mesh rotation={props.rotation} position={props.position} ref={mesh}>
-      <boxGeometry attach="geometry" args={[20, 1, SegmentWidth, 20, 1, 10]} ref={geometry} />
-      <meshStandardMaterial attach="material" color={0xada23d} emissive={0x2d475e} ref={material} side='Backside'>
-        <primitive attach="map" object={tile} ref={texture} />
+      <boxGeometry attach="geometry" args={[20, 1, SegmentWidth, 30, 1, 30]} ref={geometry} />
+      <meshStandardMaterial attach="material" color={0xc8ff00} emissive={0x2d475e} ref={material} side='Backside'>
+        {/* <primitive attach="map" object={tile} ref={texture} /> */}
       </meshStandardMaterial>
     </mesh>
   )
