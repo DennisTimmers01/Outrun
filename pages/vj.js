@@ -7,13 +7,14 @@ import { Ground } from '../components/vj/ground';
 import { Mountain } from '../components/vj/mountain';
 import { Sphere } from '../components/vj/sphere';
 import { FreakyDots } from '../components/vj/freakydots';
+import { Monolith } from '../components/vj/monolith';
 
 function Scene() {
   const hue = useRef(0);
   const groundCount = 5;
   const shereCount = 50;
-  const freakyDotsCount = 200;
-  
+  const freakyDotsCount = 400;
+
   useEffect(() => {
     socket.on('change-hue-external', data => hue.current = data);
   })
@@ -25,13 +26,14 @@ function Scene() {
       {[...Array(groundCount)].map((_, index) => (
         <>
           <Ground position={[0, -1.5, (-50 * index)]} key={index} />
-    
+
           <Mountain position={[-12, 1, (-50 * index)]} rotation={[0, 0, -.3]} />
           <Mountain position={[12, 1, (-50 * index)]} rotation={[0, 0, .3]} />
         </>
       ))}
       {[...Array(shereCount)].map(() => <Sphere position={[0, 0, 0]} rotation={[0, 0, .3]} /> )}
       {[...Array(freakyDotsCount)].map(() => <FreakyDots /> )}
+      <Monolith />
     </Canvas>
   )
 }
