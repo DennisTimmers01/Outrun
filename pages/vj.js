@@ -15,10 +15,6 @@ function Scene() {
   const shereCount = 50;
   const freakyDotsCount = 400;
 
-  useEffect(() => {
-    socket.on('change-hue-external', data => hue.current = data);
-  })
-
   return (
     <Canvas style={{height: '100vh', backgroundColor: 'black'}} >
       <directionalLight args={[0xffffff, 1]} position={[0, 10, 150]} />
