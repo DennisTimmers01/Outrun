@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 import io from 'socket.io-client';
 
 import { timelineSegments } from '../static/timeline';
 
 export const socket = io('http://localhost:3000/');
+
 
 // This acts like an async delay method
 const timeoutPromise = timeout => new Promise((resolve) => {
@@ -17,37 +18,63 @@ async function asyncForEach(array, callback) {
   }
 }
 
-const millisBetweenFrames = 16;
-
 const timelineAnimation = async () => {
+  console.log('start timeline');
+
   await asyncForEach(timelineSegments, async (segment, index) => {
-    const intervals = [];
+    console.log('foreach segment', segment, index);
+
     const intervalsSteps = [];
+    const intervalsIntervalTimeout = [];
     const intervalsCurrentPos = [];
+    const intervals = [];
 
     await asyncForEach(segment.components, async (component, index) => {
+      console.log('foreach component', component, index);
+
       // todo set interval untill total duration is over
       // calculate the stepsize and stepduration to finish on the desired moment on the desired 'place'
-      intervalsSteps.push((component.change[0].to - component.change[0].from) / segment.duration * millisBetweenFrames);
+
+      // intervalsSteps.push((component.change[0].to - component.change[0].from) / segment.duration * millisBetweenFrames);
+
+      intervalsSteps.push(
+        (component.change[0].to - component.change[0].from) / 100
+      );
+
+      intervalsIntervalTimeout.push(
+        segment.duration / 100
+      );
+
       intervalsCurrentPos.push(component.change[0].from);
+
+      console.log(intervalsIntervalTimeout, intervalsSteps, intervalsCurrentPos);
+
+      console.log('setInterval');
 
       intervals.push(
         setInterval(() => {
-          intervalsCurrentPos[index] += intervalsSteps[index];
+          intervalsCurrentPos[index] += Math.round(intervalsSteps[index] * 100) / 100;
+          console.log('interval', intervalsCurrentPos[index], index);
 
           socket.emit(component.name, {
             type: component.change[0].type,
             value: intervalsCurrentPos[index],
           });
-        }, millisBetweenFrames)
+
+        }, intervalsIntervalTimeout[index])
       );
+
+      setTimeout(() => {
+        console.log('clearing interval from timeout');
+
+        clearInterval(intervals[index]);
+      }, segment.duration);
     });
+
+    console.log('out of foreach for components');
 
     await timeoutPromise(segment.duration);
-
-    await asyncForEach(intervals, async (interval, index) => {
-      clearInterval(interval);
-    });
+    console.log('segment.duration promise resolved');
 
     if (timelineSegments.length - 1 === index) {
       timelineAnimation();

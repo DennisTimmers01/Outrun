@@ -11,21 +11,20 @@ const nextHandler = nextApp.getRequestHandler();
 
 const port = 3000;
 
-const getComponents = source =>
-  readdirSync(source, {withFileTypes: true,
-}).filter(dirent =>
-  dirent.isDirectory()).map(dirent => dirent.name
-);
+// const getComponents = source =>
+//   readdirSync(source, {withFileTypes: true,
+// }).filter(dirent =>
+//   dirent.isDirectory()).map(dirent => dirent.name
+// );
 
-const components = getComponents(path.resolve(__dirname, '../components/vj'))
+// const components = getComponents(path.resolve(__dirname, '../components/vj'))
+// console.log('Your components:\n', components, '');
 
-console.log('Your components:\n', components);
+let emit = null;
 
 io.on('connection', socket => {
-  components.forEach(component => {
-    socket.on(component, value => {
-      io.emit(component, value);
-    });
+  socket.on('ground', (data) => {
+    io.emit('ground', data);
   })
 })
 

@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 import { useRender, useThree } from 'react-three-fiber'
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 import { socket } from '../../../pages';
 
 export function Ground (props) {
   const opacity = useRef(0);
-
   const geometry = useRef(null);
   const mesh = useRef(null);
   const material = useRef(null);
@@ -19,8 +18,8 @@ export function Ground (props) {
 
   useEffect(() => {
     socket.on('ground', data => {
-      // console.log('ground', data);
       if (data.type === 'opacity') {
+        console.log(111, 'ground', data.value);
         opacity.current = data.value;
       }
     });

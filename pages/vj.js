@@ -10,7 +10,6 @@ import { FreakyDots } from '../components/vj/freakydots';
 import { Monolith } from '../components/vj/monolith';
 
 function Scene() {
-  const hue = useRef(0);
   const groundCount = 5;
   const shereCount = 50;
   const freakyDotsCount = 400;
@@ -23,13 +22,13 @@ function Scene() {
         <>
           <Ground position={[0, -1.5, (-50 * index)]} key={index} />
 
-          <Mountain position={[-12, 1, (-50 * index)]} rotation={[0, 0, -.3]} />
-          <Mountain position={[12, 1, (-50 * index)]} rotation={[0, 0, .3]} />
+          {/* <Mountain position={[-12, 1, (-50 * index)]} rotation={[0, 0, -.3]} />
+          <Mountain position={[12, 1, (-50 * index)]} rotation={[0, 0, .3]} /> */}
         </>
       ))}
-      {[...Array(shereCount)].map(() => <Sphere position={[0, 0, 0]} rotation={[0, 0, .3]} /> )}
+      {/* {[...Array(shereCount)].map(() => <Sphere position={[0, 0, 0]} rotation={[0, 0, .3]} /> )}
       {[...Array(freakyDotsCount)].map(() => <FreakyDots /> )}
-      <Monolith />
+      <Monolith /> */}
     </Canvas>
   )
 }

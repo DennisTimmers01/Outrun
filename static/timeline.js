@@ -3,7 +3,7 @@
 
 export const timelineSegments = [
     {
-        duration: 10000,
+        duration: 5000,
         components: [
             {
                 name: 'ground',
@@ -15,6 +15,7 @@ export const timelineSegments = [
                     },
                 ]
             },
+            /*
             {
                 name: 'mountain',
                 change: [
@@ -25,6 +26,7 @@ export const timelineSegments = [
                     },
                 ]
             },
+            */
         ]
     }, // END OF SEGMENT ---------------
     /*
